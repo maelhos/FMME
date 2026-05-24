@@ -1,0 +1,6 @@
+[submodule "ntl"]
+	path = ntl
+	url = https://github.com/libntl/ntl.git
+[submodule "pml"]
+	path = pml
+	url = https://github.com/vneiger/pml.git
