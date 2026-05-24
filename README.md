@@ -41,12 +41,13 @@ chmod +x patchNTL.sh
 ./patchNTL.sh
 cd ntl/src
 ./configure
-make clean && make && sudo make install
-cd ..
+make clean && make
+cd ../..
 chmod +x patch_pml_static.sh
 ./patch_pml_static.sh
 cd pml/ntl-extras
 make clean && make
+cd ../..
 ```
 
 *Patching the NTL is required for all instances above a few rounds. If you get a "Polynomial too big for FFT" error, check that the following lines are correctly set in `ntl/include/FFT.h` :*
