@@ -20,9 +20,9 @@ The purpose of this project is to provide an open-source implementation of the K
 - [x] Dense arithmetic in $\mathbb F_p[X_1, \dots, X_k]$
 - [x] Whole field evaluation
 - [x] Naive evaluation
-- [ ] Main recursion / multimodular
+- [x] Main recursion / multimodular
 - [ ] CRT Tree instead of iterative
-- [ ] **KU in the multivariate case**
+- [x] **KU in the multivariate case**
 
 ## Installation
 

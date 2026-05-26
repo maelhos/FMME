@@ -1,13 +1,7 @@
-#include "lzz_pXY_Kedlaya_Umans.h"
+#include "lzz_p_Kedlaya_Umans.h"
 #include <assert.h>
 #include <bit>
 #include "util.h"
-
-#if (1)
-    #define cout_debug std::cout
-#else
-    #define cout_debug if (true) {} else std::cout
-#endif
 
 ZZ eval_ZZ_zz_pX(const zz_pX& f, const ZZ a)
 {
@@ -37,7 +31,7 @@ ZZ eval_ZZ_zz_pXY(const zz_pXY& f, const ZZ a, const ZZ b)
     return acc;
 }
 
-ZZ zz_pXY_Kedlaya_Umans::computeUpper(const zz_pXY& pol)
+ZZ zz_p_Kedlaya_Umans::computeUpper(const zz_pXY& pol)
 {
     ZZ p(zz_p::modulus());
     ZZ ret{};
@@ -46,7 +40,7 @@ ZZ zz_pXY_Kedlaya_Umans::computeUpper(const zz_pXY& pol)
     return ret;
 }
 
-void zz_pXY_Kedlaya_Umans::evaluateLookupNaive(Vec<zz_p>& val, const zz_pXY& pol, const zz_p_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
+void zz_p_Kedlaya_Umans::evaluateLookupNaive(Vec<zz_p>& val, const zz_pXY& pol, const zz_p_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
 {
     //cout_debug << "[+] Call to whole field eval with p = " << zz_p::modulus() << endl;
     Vec<Vec<zz_p>> vals_field;
@@ -68,7 +62,7 @@ void zz_pXY_Kedlaya_Umans::evaluateLookupNaive(Vec<zz_p>& val, const zz_pXY& pol
 /*
 # Complexity : O~(degY(pol) * p + degY(pol)*degX(pol) + p^2 + len(pts))
 */
-void zz_pXY_Kedlaya_Umans::evaluateLookupNaiveReduced(Vec<zz_p>& val, const zz_pXY& pol, const zz_p_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
+void zz_p_Kedlaya_Umans::evaluateLookupNaiveReduced(Vec<zz_p>& val, const zz_pXY& pol, const zz_p_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
 {
     //cout_debug << "[+] Call to whole field eval with p = " << zz_p::modulus() << endl;
     assert((pol.degX() < zz_p::modulus()) && (pol.degY() < zz_p::modulus()));
@@ -88,12 +82,12 @@ void zz_pXY_Kedlaya_Umans::evaluateLookupNaiveReduced(Vec<zz_p>& val, const zz_p
     //cout_debug << "[2/2] Done whole field lookup" << endl;
 }
 
-long zz_pXY_Kedlaya_Umans::computePhi(const zz_pXY& pol)
+long zz_p_Kedlaya_Umans::computePhi(const zz_pXY& pol)
 {
     return (pol.degX() + pol.degY()) / 8;
 }
 
-void zz_pXY_Kedlaya_Umans::getEvaluator(zz_p_Multipoint_Field& ev)
+void zz_p_Kedlaya_Umans::getEvaluator(zz_p_Multipoint_Field& ev)
 {
     long r = zz_p::modulus();
     if (!evaluators.contains(r))
@@ -102,8 +96,13 @@ void zz_pXY_Kedlaya_Umans::getEvaluator(zz_p_Multipoint_Field& ev)
     ev = evaluators[r];
 }
 
+void zz_p_Kedlaya_Umans::removeEvaluator(zz_p_Multipoint_Field& ev)
+{
+    long r = zz_p::modulus();
+    evaluators.erase(r);
+}
 
-void zz_pXY_Kedlaya_Umans::multimodEvaluate(Vec<ZZ>& valz, Vec<zz_p>& val, const zz_pXY& pol, const Vec<pair<zz_p, zz_p>>& pts, long t)
+void zz_p_Kedlaya_Umans::multimodEvaluate(Vec<ZZ>& valz, Vec<zz_p>& val, const zz_pXY& pol, const Vec<pair<zz_p, zz_p>>& pts, long t)
 {
     long r = zz_p::modulus();
     //cout_debug << "[+] Call to multimod eval with p = " << r << " and t = " << t << endl << flush;

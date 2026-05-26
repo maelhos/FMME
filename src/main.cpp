@@ -2,7 +2,7 @@
 #include "lzz_p_Multipoint_Field.h"
 #include "lzz_pX_extra.h"
 #include "lzz_pXY.h"
-#include "lzz_pXY_Kedlaya_Umans.h"
+#include "lzz_p_Kedlaya_Umans.h"
 #include "prime_sieve.h"
 #include <NTL/ALL_FEATURES.h>
 #include <NTL/lzz_pX.h>
@@ -168,7 +168,7 @@ int test_Kedlaya_Umans_Multimod(){
     //zz_p::init(49529);
     //zz_p::init(173);
     double t2, t3;
-    zz_pXY_Kedlaya_Umans ev1{};
+    zz_p_Kedlaya_Umans ev1{};
 
     int T = 1;
 
@@ -254,10 +254,76 @@ int test_MultipointFieldGenericXi(){
 }
 
 
+int test_Kedlaya_Umans_MultimodMV(){
+    //zz_p::init(0x64ec6dd0392073ULL);
+    //zz_p::init(14559583);
+    zz_p::init(49529);
+    //zz_p::init(173);
+    double t2, t3;
+    zz_p_Kedlaya_Umans ev1{};
+
+    constexpr int T = 1;
+    constexpr size_t NV = 4;
+
+    for (long i = 4; i < 100; i += 1) // i = 7
+    {
+        zz_pXi<NV> a{};
+        random_zz_pXi(a, 1ULL << i);
+
+        Vec<zz_p> v1, v2, v3;
+        Vec<ZZ> vz1, vz2;
+        for (long j = 10; j < 25; j += 1) // j = 20
+        {
+            long nbr_pts = (1ULL << j);
+            Vec<array<zz_p, NV>> pts{}; pts.SetLength(nbr_pts);
+            for (long k = 0; k < nbr_pts; k++)
+            {
+                for (size_t l = 0; l < NV; l++)
+                    pts[k][l] = random_zz_p(); 
+            }
+            
+            cout << "[+] Test of degree " << (1ULL << i) << " in " << NV << " variable and " << nbr_pts << " points" << endl;
+            cout << "[-----------------------------------------------]" << endl;
+            
+            
+            //t1 = get_time();
+            //cout << "KU for t=0" << endl;
+            //ev1.multimodEvaluate(vz1, v1, a, pts, 0);
+            //t1 = get_time()-t1;
+
+            t2 = get_time();
+            cout << "KU for t=" << T << endl;
+            ev1.multimodEvaluate(vz2, v2, a, pts, T);
+            t2 = get_time()-t2;
+
+            t3 = get_time();
+            v3.SetLength(nbr_pts);
+            for (long k = 0; k < nbr_pts; k++)
+                v3[k] = eval(a, pts[k]);
+            t3 = get_time() - t3;
+
+            cout << "[-----------------------------------------------]" << endl;
+            //cout << "[+] time multimod t = 0 : " << t1 << endl;
+            cout << "[+] time multimod t = " << T << " : " << t2 << endl;
+            cout << "[+] time naive eval : " << t3 << endl;
+            //cout << "[+] equal v1 / v3: " << (v1 == v3) << endl;
+            cout << "[+] equal v2 / v3: " << (v2 == v3) << endl;
+            cout << "[+] v3 is the reference" << endl;
+            cout << "[+] partial deg : " << (1 << i) << endl;
+
+            cout << "[-----------------------------------------------]" << endl;
+            cout << endl;
+
+        }
+    }
+
+    return 0;
+}
+
 int main(int argc, char* argv[]){
     //test_MultipointField2D();
     //test_Kedlaya_Umans_Multimod();
-    test_MultipointFieldGenericXi();
-
+    //test_MultipointFieldGenericXi();
+    test_Kedlaya_Umans_MultimodMV();
     return 0;
 }

@@ -336,7 +336,7 @@ inline zz_pXi<N> random_zz_pXi(long d){
 /*------------------------------------------------------------*/
 /* degrees                                                    */
 /*------------------------------------------------------------*/
-template <long K, long N>
+template <size_t K, size_t N>
 inline void __degrees_rec(const zz_pXi<K>& f, array<long, N>& arr)
 {
     if constexpr (K == 1)
