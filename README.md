@@ -17,7 +17,7 @@ The purpose of this project is to provide an open-source implementation of the K
 
 ### Multivariate case
 
-- [x] Dense arithmetic in $\mathbb F_p[X_1, \dots, X_k]$ (should soon be pushed here)
+- [x] Dense arithmetic in $\mathbb F_p[X_1, \dots, X_k]$
 - [x] Whole field evaluation
 - [x] Naive evaluation
 - [ ] Main recursion / multimodular
