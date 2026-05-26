@@ -5,7 +5,7 @@
 
 NTL_CLIENT
 
-class kedlaya_prime_sieve
+class prime_sieve
 {
 private:
     long size;
@@ -13,8 +13,8 @@ private:
     Vec<bool> isPrime;
 
 public:
-    kedlaya_prime_sieve(long n);
-    kedlaya_prime_sieve() : kedlaya_prime_sieve(64) {}
+    prime_sieve(long n);
+    prime_sieve() : prime_sieve(64) {}
 
     inline Vec<long> primes() const
     {

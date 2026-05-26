@@ -1,12 +1,13 @@
 
-#include "lzz_pX_Multipoint_Field.h"
+#include "lzz_p_Multipoint_Field.h"
 #include "lzz_pX_extra.h"
 #include "lzz_pXY.h"
 #include "lzz_pXY_Kedlaya_Umans.h"
-#include "kedlaya_prime_sieve.h"
+#include "prime_sieve.h"
 #include <NTL/ALL_FEATURES.h>
 #include <NTL/lzz_pX.h>
 #include "util.h"
+#include "NVec.h"
 
 NTL_CLIENT
 
@@ -16,7 +17,7 @@ int test_MultipointField2D(){
     double t1, t2;
 
     t1 = get_time();
-    zz_pX_Multipoint_Field ev1{};
+    zz_p_Multipoint_Field ev1{};
     t1 = get_time()-t1;
 
 
@@ -65,7 +66,7 @@ int test_MultipointField(){
     double t1, t2, t3;
 
     t1 = get_time();
-    zz_pX_Multipoint_Field ev1{};
+    zz_p_Multipoint_Field ev1{};
     t1 = get_time()-t1;
 
     vec_zz_p pts(INIT_SIZE, zz_p::modulus());
@@ -112,9 +113,9 @@ int test_MultipointField(){
 }
 
 
-void test_kedlaya_prime_sieve()
+void test_prime_sieve()
 {
-    kedlaya_prime_sieve ps(100);
+    prime_sieve ps(100);
 
     cout << "first 100 primes : " << endl;
     for (long i = 0; i < ps.primes().length(); i++)
@@ -136,7 +137,7 @@ void test_kedlaya_prime_sieve()
 
 void test_kedlaya_multimod()
 {
-    kedlaya_prime_sieve ps{};
+    prime_sieve ps{};
 
     long low = 200;
     ZZ top(INIT_VAL, "111222333444555");
@@ -221,9 +222,42 @@ int test_Kedlaya_Umans_Multimod(){
     return 0;
 }
 
+////////////// multivariate
+
+int test_MultipointFieldGenericXi(){
+    zz_p::init(0x64ec6dd0392073ULL);
+    //zz_p::init(14559583);
+    //zz_p::init(49529);
+    //zz_p::init(173);
+    zz_p::init(173);
+    constexpr long nb_var = 4;
+    using MP = zz_pXi<nb_var>;
+
+    MP P{};
+    MP Q{};
+    random_zz_pXi(P, 12);
+    reduceFermat(Q, P);
+
+    array<zz_p, 4> test_pt{zz_p(6), zz_p(7), zz_p(10), zz_p(69)};
+
+    cout << eval(P, test_pt) << endl;
+    cout << eval(Q, test_pt) << endl;
+    
+    NVec<nb_var> ret{};
+    zz_p_Multipoint_Field MF{};
+
+    MF.evaluate(ret, P);
+
+    cout << getEval(ret, test_pt) << endl;
+
+    return 0;
+}
+
+
 int main(int argc, char* argv[]){
     //test_MultipointField2D();
-    test_Kedlaya_Umans_Multimod();
+    //test_Kedlaya_Umans_Multimod();
+    test_MultipointFieldGenericXi();
 
     return 0;
 }

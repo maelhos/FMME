@@ -1,8 +1,8 @@
-#include "lzz_pX_Multipoint_Field.h"
+#include "lzz_p_Multipoint_Field.h"
 #include <assert.h>
 #include "lzz_pX_extra_extra.h"
  
-zz_pX_Multipoint_Field::zz_pX_Multipoint_Field() : r((zz_p::modulus() - 1) / 2)
+zz_p_Multipoint_Field::zz_p_Multipoint_Field() : r((zz_p::modulus() - 1) / 2)
 {
     element_of_order(q, zz_p::modulus() - 1);
     assert(q.LoopHole());
@@ -15,7 +15,7 @@ zz_pX_Multipoint_Field::zz_pX_Multipoint_Field() : r((zz_p::modulus() - 1) / 2)
 /*
 Complexity : O~(p + deg(f))
 */
-void zz_pX_Multipoint_Field::evaluate(Vec<zz_p>& val, const zz_pX& f) const
+void zz_p_Multipoint_Field::evaluate(Vec<zz_p>& val, const zz_pX& f) const
 {
     long p = zz_p::modulus();
     val.SetLength(p);
@@ -74,7 +74,7 @@ void evaluateWholeFieldNaive(Vec<zz_p>& val, const zz_pX& pol)
         val[i] = eval(pol, to_zz_p(i));
 }
 
-void zz_pX_Multipoint_Field::reduceFermat(zz_pX& a, const zz_pX& b)
+void reduceFermat(zz_pX& a, const zz_pX& b)
 {
     long p = zz_p::modulus();
     // the NTL makes the asumptions that zz_p are reduced which can be false
@@ -93,12 +93,12 @@ void zz_pX_Multipoint_Field::reduceFermat(zz_pX& a, const zz_pX& b)
     a.normalize();
 }
 
-void zz_pX_Multipoint_Field::reduceFermat(zz_pXY& a, const zz_pXY& b)
+void reduceFermat(zz_pXY& a, const zz_pXY& b)
 {
     long p = zz_p::modulus();
     a.rep.SetLength(b.rep.length());
     for (long i = 0; i < a.rep.length(); i++)
-        zz_pX_Multipoint_Field::reduceFermat(a.rep[i], b.rep[i]);
+        reduceFermat(a.rep[i], b.rep[i]);
 
     long d = a.degY();
 
@@ -112,7 +112,7 @@ void zz_pX_Multipoint_Field::reduceFermat(zz_pXY& a, const zz_pXY& b)
 /*
 Complexity : O~(degY(pol) * p + degY(pol)*degX(pol) + p^2)
 */
-void zz_pX_Multipoint_Field::evaluateReduced(Vec<Vec<zz_p>>& val, const zz_pXY& pol) const
+void zz_p_Multipoint_Field::evaluateReduced(Vec<Vec<zz_p>>& val, const zz_pXY& pol) const
 {
     long p = zz_p::modulus();
     assert(pol.degX() < p && pol.degY() < p);

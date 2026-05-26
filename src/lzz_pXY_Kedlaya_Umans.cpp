@@ -46,7 +46,7 @@ ZZ zz_pXY_Kedlaya_Umans::computeUpper(const zz_pXY& pol)
     return ret;
 }
 
-void zz_pXY_Kedlaya_Umans::evaluateLookupNaive(Vec<zz_p>& val, const zz_pXY& pol, const zz_pX_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
+void zz_pXY_Kedlaya_Umans::evaluateLookupNaive(Vec<zz_p>& val, const zz_pXY& pol, const zz_p_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
 {
     //cout_debug << "[+] Call to whole field eval with p = " << zz_p::modulus() << endl;
     Vec<Vec<zz_p>> vals_field;
@@ -68,7 +68,7 @@ void zz_pXY_Kedlaya_Umans::evaluateLookupNaive(Vec<zz_p>& val, const zz_pXY& pol
 /*
 # Complexity : O~(degY(pol) * p + degY(pol)*degX(pol) + p^2 + len(pts))
 */
-void zz_pXY_Kedlaya_Umans::evaluateLookupNaiveReduced(Vec<zz_p>& val, const zz_pXY& pol, const zz_pX_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
+void zz_pXY_Kedlaya_Umans::evaluateLookupNaiveReduced(Vec<zz_p>& val, const zz_pXY& pol, const zz_p_Multipoint_Field& ev, const Vec<pair<zz_p, zz_p>>& pts)
 {
     //cout_debug << "[+] Call to whole field eval with p = " << zz_p::modulus() << endl;
     assert((pol.degX() < zz_p::modulus()) && (pol.degY() < zz_p::modulus()));
@@ -93,11 +93,11 @@ long zz_pXY_Kedlaya_Umans::computePhi(const zz_pXY& pol)
     return (pol.degX() + pol.degY()) / 8;
 }
 
-void zz_pXY_Kedlaya_Umans::getEvaluator(zz_pX_Multipoint_Field& ev)
+void zz_pXY_Kedlaya_Umans::getEvaluator(zz_p_Multipoint_Field& ev)
 {
     long r = zz_p::modulus();
     if (!evaluators.contains(r))
-        evaluators[r] = zz_pX_Multipoint_Field();
+        evaluators[r] = zz_p_Multipoint_Field();
     
     ev = evaluators[r];
 }
@@ -142,7 +142,7 @@ void zz_pXY_Kedlaya_Umans::multimodEvaluate(Vec<ZZ>& valz, Vec<zz_p>& val, const
         if (cost_whole_field < cost_naive)
         {
             cout_debug << "Using whole field\n";
-            zz_pX_Multipoint_Field ev;
+            zz_p_Multipoint_Field ev;
             getEvaluator(ev);
             evaluateLookupNaiveReduced(val, pol, ev, pts);
         }
@@ -206,7 +206,7 @@ void zz_pXY_Kedlaya_Umans::multimodEvaluate(Vec<ZZ>& valz, Vec<zz_p>& val, const
         Vec<zz_p> vals_p{};
         Vec<pair<zz_p, zz_p>> pts_p{};
         zz_pXY pol_r{};
-        zz_pX_Multipoint_Field::reduceFermat(pol_r, pol);
+        reduceFermat(pol_r, pol);
 
         // reinstantialte and reduce pts with new modulus
         pts_p.SetLength(pts.length());
@@ -230,7 +230,7 @@ void zz_pXY_Kedlaya_Umans::multimodEvaluate(Vec<ZZ>& valz, Vec<zz_p>& val, const
         Vec<zz_p> vals_p{};
         Vec<pair<zz_p, zz_p>> pts_p{};
         zz_pXY pol_r{};
-        zz_pX_Multipoint_Field::reduceFermat(pol_r, pol);
+        reduceFermat(pol_r, pol);
 
         // reinstantialte and reduce pts with new modulus
         pts_p.SetLength(pts.length());

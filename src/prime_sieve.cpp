@@ -1,6 +1,6 @@
-#include "kedlaya_prime_sieve.h"
+#include "prime_sieve.h"
 
-kedlaya_prime_sieve::kedlaya_prime_sieve(long s) : size(2)
+prime_sieve::prime_sieve(long s) : size(2)
 {
     isPrime.SetLength(size);
 
@@ -10,7 +10,7 @@ kedlaya_prime_sieve::kedlaya_prime_sieve(long s) : size(2)
     extend(max(64, s));
 }
 
-void kedlaya_prime_sieve::extend(long n)
+void prime_sieve::extend(long n)
 {
     if (n <= size) 
     {
@@ -46,7 +46,7 @@ void kedlaya_prime_sieve::extend(long n)
     }
 }
 
-void kedlaya_prime_sieve::boundedMultiModularBasis(Vec<long>& ret, long beta, const ZZ& beta_bar)
+void prime_sieve::boundedMultiModularBasis(Vec<long>& ret, long beta, const ZZ& beta_bar)
 {
     //cout << "[+] Called mutlimodular basis" << endl;
     while (biggestPrime() <= beta) extend(2*size); 
