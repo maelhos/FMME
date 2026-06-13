@@ -361,7 +361,7 @@ template <size_t N>
 inline long prodp1(const array<long, N>& degs)
 {
     long p = 1;
-    for (long i = 0; i < N; i++)
+    for (size_t i = 0; i < N; i++)
         p *= degs[i] + 1;
     
     return p;    

@@ -24,6 +24,22 @@ The purpose of this project is to provide an open-source implementation of the K
 - [ ] CRT Tree instead of iterative
 - [x] **KU in the multivariate case**
 
+### Reduction to modular composition
+
+The modular composition as described in the paper is implemented in gives the following timing on my laptop :
+
+```text
+Degree      Brent-Kung NTL    Naive Precomp     Naive             KU                Equal (1 vs 2-4) 
+-----------------------------------------------------------------------------------------------------
+100         0.000394          0.001805          0.001795          0.077471          1 | 1 | 1        
+200         0.001074          0.010998          0.013413          0.364637          1 | 1 | 1        
+400         0.003127          0.054707          0.097664          1.919801          1 | 1 | 1        
+800         0.009534          0.211145          0.649146          9.475037          1 | 1 | 1        
+1600        0.028280          0.925718          2.754807          47.084018         1 | 1 | 1        
+3200        0.084810          3.881357          10.914877         255.298157        1 | 1 | 1        
+6400        0.252576          16.453398         46.066293         1212.349421       1 | 1 | 1   
+```
+
 ## Installation
 
 First clone the repo with the submodule :

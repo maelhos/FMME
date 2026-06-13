@@ -80,6 +80,7 @@ public:
     }
     // asserts that degX,Y pol < p
     void multimodEvaluate(Vec<ZZ>& valz, Vec<zz_p>& val, const zz_pXY& pol, const Vec<pair<zz_p, zz_p>>& pts, long t);
+    
     template <size_t N>
     void multimodEvaluate(Vec<ZZ>& valz, Vec<zz_p>& val, const zz_pXi<N>& pol, const Vec<array<zz_p, N>>& pts, long t)
     {

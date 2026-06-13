@@ -8,6 +8,9 @@
 #include <NTL/lzz_pX.h>
 #include "util.h"
 #include "NVec.h"
+#include "mv_comp.h"
+#include <iostream>
+#include <iomanip>
 
 NTL_CLIENT
 
@@ -320,10 +323,100 @@ int test_Kedlaya_Umans_MultimodMV(){
     return 0;
 }
 
+
+void CompModNaive(zz_pX& x, const zz_pX& g, const zz_pX& h, const zz_pX& f)
+{
+
+    x = g.rep[deg(g)];
+    for (long d = deg(g) - 1; d >= 0; d--)
+    {
+        MulMod(x, x, h, f);
+        x += g.rep[d];
+    }
+}
+
+void CompModNaivePrecomp(zz_pX& x, const zz_pX& g, const zz_pX& h, const zz_pXModulus& f)
+{
+
+    x = g.rep[deg(g)];
+    for (long d = deg(g) - 1; d >= 0; d--)
+    {
+        MulMod(x, x, h, f);
+        x += g.rep[d];
+    }
+}
+
+
+constexpr int w_deg = 12;
+constexpr int w_time = 18;
+constexpr int w_eq = 17;
+
+template <long i, long max_val>
+void bench_step() {
+    if constexpr (i < max_val) {
+        double t1, t2, t3, t4;
+        zz_pX P, Q, R;
+        zz_pX C1, C2, C3, C4;
+        
+        R = random_zz_pX(i);
+        P = random_zz_pX(i - 1);
+        Q = random_zz_pX(i - 1);
+
+        t1 = GetTime();
+        CompMod(C1, P, Q, R);
+        t1 = GetTime() - t1;
+
+        t2 = GetTime();
+        CompModNaivePrecomp(C2, P, Q, R);
+        t2 = GetTime() - t2;
+
+        t3 = GetTime();
+        CompModNaive(C3, P, Q, R);
+        t3 = GetTime() - t3;
+
+        t4 = GetTime();
+        CompModKU<i-1>(C4, P, Q, R);
+        t4 = GetTime() - t4;
+
+        cout << left 
+             << setw(w_deg)  << i 
+             << setw(w_time) << fixed << setprecision(6) << t1 
+             << setw(w_time) << fixed << setprecision(6) << t2 
+             << setw(w_time) << fixed << setprecision(6) << t3 
+             << setw(w_time) << fixed << setprecision(6) << t4 
+             << setw(w_eq)   << to_string(C1 == C2) + " | " + to_string(C1 == C3) + " | " + to_string(C1 == C4)
+             << "\n";
+
+        bench_step<(i << 1), max_val>();
+    }
+}
+
+int test_modular_composition()
+{
+    zz_p::init(0x64ec6dd0392073ULL);
+
+    cout << left 
+         << setw(w_deg)  << "Degree" 
+         << setw(w_time) << "Brent-Kung NTL" 
+         << setw(w_time) << "Naive Precomp" 
+         << setw(w_time) << "Naive" 
+         << setw(w_time) << "KU" 
+         << setw(w_eq)   << "Equal (1 vs 2-4)" 
+         << "\n";
+         
+    cout << string(w_deg + 4 * w_time + w_eq, '-') << "\n";
+
+    bench_step<100, (1LL << 20)>();
+
+    return 0;
+}
+
+
 int main(int argc, char* argv[]){
     //test_MultipointField2D();
     //test_Kedlaya_Umans_Multimod();
     //test_MultipointFieldGenericXi();
-    test_Kedlaya_Umans_MultimodMV();
+    //test_Kedlaya_Umans_MultimodMV();
+    test_modular_composition();
     return 0;
 }
